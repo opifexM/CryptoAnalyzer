@@ -1,12 +1,16 @@
 package commands;
 
 import base.Crypto;
+import base.Logger;
 
 import java.util.*;
 
 public class Analyser {
+    private Analyser() {
+    }
+
     public static int analyzer(Crypto crypto, String enText) {
-        System.out.println("[Analyzer  ] Начало анализа.");
+        Logger.log("[Analyzer  ] Начало анализа.");
         Map<Character, Integer> numbersOfCharacter = new HashMap<>();
 
         for (int i = 0; i < enText.length(); i++) {
@@ -26,7 +30,7 @@ public class Analyser {
             }
         }
 
-        System.out.println("[Analyzer  ] Возможный пробел символ [" + popularSymbol + "]. Встречался " + topIndex + " раз.");
+        Logger.log("[Analyzer  ] Возможный пробел символ [" + popularSymbol + "]. Встречался " + topIndex + " раз.");
         int popularSymbolKey = 0;
         int spaceSymbolKey = 0;
         int key = 0;
@@ -39,21 +43,21 @@ public class Analyser {
             }
             key++;
         }
-        System.out.println("[Analyzer  ] Cимвол [пробел] имеет ключ " + spaceSymbolKey);
-        System.out.println("[Analyzer  ] Cимвол [" + popularSymbol + "] имеет ключ " + popularSymbolKey);
+        Logger.log("[Analyzer  ] Символ [пробел] имеет ключ " + spaceSymbolKey);
+        Logger.log("[Analyzer  ] Символ [" + popularSymbol + "] имеет ключ " + popularSymbolKey);
         int tryKey;
         if (spaceSymbolKey + popularSymbolKey > crypto.getCryptoBaseIndex()) {
             tryKey = spaceSymbolKey + popularSymbolKey - crypto.getCryptoBaseIndex() + 2;
         } else {
             tryKey = spaceSymbolKey + popularSymbolKey;
         }
-        System.out.println("[Analyzer  ] Возможный ключ сдвига: " + tryKey);
-        System.out.println("[Analyzer  ] Конец анализа.");
+        Logger.log("[Analyzer  ] Возможный ключ сдвига: " + tryKey);
+        Logger.log("[Analyzer  ] Конец анализа.");
         return tryKey;
     }
 
     public static void printAnalyse(int key) {
-        System.out.println("[Analyzer  ] Попытка дешифровки с ключем (" + key + ")");
+        Logger.log("[Analyzer  ] Попытка дешифровки с ключем (" + key + ")");
     }
 
 }

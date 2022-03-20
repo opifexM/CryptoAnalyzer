@@ -1,4 +1,5 @@
 import base.Crypto;
+import base.Logger;
 import base.Utils;
 import commands.Analyser;
 import commands.BruteForce;
@@ -11,7 +12,6 @@ import java.util.Scanner;
 import static dictionaries.Constants.*;
 
 public class Main {
-
     public static void main(String[] args) {
         Crypto crypto = new Crypto();
         crypto.loadAlphabet(EN_ALPHABET);
@@ -20,83 +20,66 @@ public class Main {
         crypto.loadAlphabet(SYMBOL_ALPHABET);
         crypto.printAllAlphabet();
 
-        Scanner scanner = new Scanner(System.in);
         int key = 0;
-        String input;
+        Scanner scanner = new Scanner(System.in);
 
         String textForEncryption = Utils.loadFile(FILE_FOR_ENCRYPTION);
-        while (!textForEncryption.isEmpty()) {
-            System.out.println("----------------------------------------------------------------");
+        if (textForEncryption.isEmpty()) {
+            Logger.log("[ERROR] Файл для шифрования не загружен. Завершение работы программы.");
+        }
+
+        while (true) {
             if (key == 0) {
-                System.out.println("Введите ключ для шифровки (от 1 до " + crypto.getCryptoBaseIndex() + "):");
-                input = scanner.nextLine();
-                if (!NumberUtils.isDigits(input)) {
-                    System.out.println("Неправильный ввод ключа.");
-                    continue;
-                }
-                if (Integer.parseInt(input) < 0 || Integer.parseInt(input) > crypto.getCryptoBaseIndex()) {
-                    System.out.println("Ключ не может быть меньше 0 или больше " + crypto.getCryptoBaseIndex());
-                    continue;
-                }
-                key = Integer.parseInt(input);
-            } else {
-                System.out.println(" Программа Криптоанализатор Шифр Цезаря");
-                System.out.println("      Секретный ключ: [" + key + "]");
-                System.out.println("[1] - Шифрование Шифром Цезаря");
-                System.out.println("[2] - Расшифровка через секретный ключ");
-                System.out.println("[3] - Расшифровка перебором словаря");
-                System.out.println("[4] - Расшифровка через анализ текста");
-                System.out.println("[0] - Выход");
-                System.out.println("Выберите действие: ");
+                key = crypto.getKey(scanner);
+                continue;
+            }
+            Logger.log("----------------------------------------------------------------");
+            Logger.log(" Программа Криптоанализатор Шифр Цезаря");
+            Logger.log("      Секретный ключ: [" + key + "]");
+            Logger.log("[1] - Шифрование Шифром Цезаря");
+            Logger.log("[2] - Расшифровка через секретный ключ");
+            Logger.log("[3] - Расшифровка перебором словаря");
+            Logger.log("[4] - Расшифровка через анализ текста");
+            Logger.log("[0] - Выход");
+            Logger.log("Выберите действие: ");
 
-                input = scanner.nextLine();
-                if ("0".equals(input)) {
-                    System.out.println("Завершение работы.");
-                    break;
-                } else if ("1".equals(input)) {
-                    Utils.printOriginText(Utils.cutString(textForEncryption), key);
+            String input = scanner.nextLine();
+            if (input.equals("0")) {
+                Logger.log("Завершение работы.");
+                break;
+            }
+            if (!NumberUtils.isDigits(input) || Integer.parseInt(input) < 0 || Integer.parseInt(input) > 4) {
+                Logger.log("[ERROR] Неправильный ввод комманды.");
+                continue;
+            }
 
-                    String enText = Encryption.encryption(crypto, textForEncryption, key);
-                    Utils.saveToFile(enText, FILE_FOR_DECRYPTION);
-                    Encryption.printEncryptionText(Utils.cutString(enText));
+            Utils.printOriginText(Utils.cutString(textForEncryption), key);
+            String enText = Encryption.encryption(crypto, textForEncryption, key);
+            Encryption.printEncryptionText(Utils.cutString(enText));
 
-                } else if ("2".equals(input)) {
-                    Utils.printOriginText(Utils.cutString(textForEncryption), key);
-
-                    String enText = Encryption.encryption(crypto, textForEncryption, key);
-                    Encryption.printEncryptionText(Utils.cutString(enText));
-
+            switch (input) {
+                case "1" -> Utils.saveToFile(enText, FILE_FOR_DECRYPTION);
+                case "2" -> {
                     String deText = Decryption.decryption(crypto, enText, key);
                     Decryption.printDecryptionText(Utils.cutString(deText));
-
-                } else if ("3".equals(input)) {
-                    Utils.printOriginText(Utils.cutString(textForEncryption), key);
-
-                    String enText = Encryption.encryption(crypto, textForEncryption, key);
-                    Encryption.printEncryptionText(Utils.cutString(enText));
-
+                }
+                case "3" -> {
                     int bruteForceKey = BruteForce.bruteForce(crypto, enText);
                     BruteForce.printBruteForce(bruteForceKey);
-
                     String deText = Decryption.decryption(crypto, enText, bruteForceKey);
                     Decryption.printDecryptionText(Utils.cutString(deText));
-
-                } else if ("4".equals(input)) {
-                    Utils.printOriginText(Utils.cutString(textForEncryption), key);
-
-                    String enText = Encryption.encryption(crypto, textForEncryption, key);
-                    Encryption.printEncryptionText(Utils.cutString(enText));
-
+                }
+                case "4" -> {
                     int analyserKey = Analyser.analyzer(crypto, enText);
                     Analyser.printAnalyse(analyserKey);
-
                     String deText = Decryption.decryption(crypto, enText, analyserKey);
                     Decryption.printDecryptionText(Utils.cutString(deText));
                 }
-                System.out.println();
-                System.out.println("Нажмите клавишу для продолжения...");
-                scanner.nextLine();
+                default -> Logger.log("[ERROR] Неправильный ввод комманды.");
             }
+            Logger.log("");
+            Logger.log("Нажмите клавишу для продолжения...");
+            scanner.nextLine();
         }
     }
 }

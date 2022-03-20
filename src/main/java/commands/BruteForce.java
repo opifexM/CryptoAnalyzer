@@ -1,6 +1,7 @@
 package commands;
 
 import base.Crypto;
+import base.Logger;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,13 +14,15 @@ import static dictionaries.Constants.BRUTE_FORCE_DICTIONARY;
 public class BruteForce {
     private static final List<String> wordsDB = new ArrayList<>();
 
+    private BruteForce() {
+    }
+
     public static int bruteForce(Crypto crypto, String enText) {
         loadWordsDB();
-        System.out.println("[BruteForce] Начало перебора. Ключи от 0 до " + crypto.getCryptoBaseIndex() + ".");
+        Logger.log("[BruteForce] Начало перебора. Ключи от 0 до " + crypto.getCryptoBaseIndex() + ".");
 
         int bruteForceKey = 0;
         int bruteForceKeyGoodIndex = 0;
-        System.out.print("");
         for (int key = 0; key <= crypto.getCryptoBaseIndex(); key++) {
             int currentGoodIndex = 0;
             String tryDecryption = Decryption.decryption(crypto, enText, key);
@@ -36,14 +39,13 @@ public class BruteForce {
                     bruteForceKeyGoodIndex = currentGoodIndex;
                     bruteForceKey = key;
                 }
-                System.out.println();
-                System.out.println("[BruteForce] При ключе (" + key + ") найдено " + currentGoodIndex + " совпадений со словарем.");
-                System.out.print("");
+                Logger.log("");
+                Logger.log("[BruteForce] При ключе (" + key + ") найдено " + currentGoodIndex + " совпадений со словарем.");
             }
-            System.out.print("+");
+            Logger.logSameLine("+");
         }
-        System.out.println();
-        System.out.println("[BruteForce] Конец перебора.");
+        Logger.log("");
+        Logger.log("[BruteForce] Конец перебора.");
         return bruteForceKey;
     }
 
@@ -55,13 +57,13 @@ public class BruteForce {
                 wordsDB.add(s);
                 index++;
             }
-            System.out.println("[BruteForce] Загружено " + index + " слов в словарь перебора.");
+            Logger.log("[BruteForce] Загружено " + index + " слов в словарь перебора.");
         } catch (IOException ex) {
-            System.out.println("[ERROR] Ошибка загрузки словаря для перебора " + ex.getMessage());
+            Logger.log("[ERROR] Ошибка загрузки словаря для перебора " + ex.getMessage());
         }
     }
 
     public static void printBruteForce(int key) {
-        System.out.println("[BruteForce] Попытка дешифровки с ключем (" + key + ")");
+        Logger.log("BruteForce] Попытка дешифровки с ключем (" + key + ")");
     }
 }

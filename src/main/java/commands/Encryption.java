@@ -1,11 +1,15 @@
 package commands;
 
 import base.Crypto;
+import base.Logger;
 
 public class Encryption {
+    private Encryption() {
+    }
+
     public static String encryption(Crypto crypto, String text, int key) {
         if (key < 0 || key > crypto.getCryptoBaseIndex()) {
-            System.out.println("Ключ не может быть меньше 0 или больше " + crypto.getCryptoBaseIndex());
+            Logger.log("Ключ не может быть меньше 0 или больше " + crypto.getCryptoBaseIndex());
             return "";
         }
         StringBuilder encryptionText = new StringBuilder();
@@ -28,7 +32,7 @@ public class Encryption {
     }
 
     public static void printEncryptionText(String text) {
-        System.out.println("[Encryption] " + text) ;
+        Logger.log("[Encryption] " + text);
     }
 
 }

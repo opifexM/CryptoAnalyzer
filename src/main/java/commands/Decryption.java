@@ -1,11 +1,15 @@
 package commands;
 
 import base.Crypto;
+import base.Logger;
 
 public class Decryption {
+    private Decryption() {
+    }
+
     public static String decryption(Crypto crypto, String text, int key) {
         if (key < 0 || key > crypto.getCryptoBaseIndex()) {
-            System.out.println("Ключ не может быть меньше 0 или больше " + crypto.getCryptoBaseIndex());
+            Logger.log("Ключ не может быть меньше 0 или больше " + crypto.getCryptoBaseIndex());
             return "";
         }
 
@@ -27,6 +31,6 @@ public class Decryption {
     }
 
     public static void printDecryptionText(String text) {
-        System.out.println("[Decryption] " + text);
+        Logger.log("[Decryption] " + text);
     }
 }

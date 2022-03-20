@@ -3,6 +3,10 @@ package base;
 import java.io.*;
 
 public class Utils {
+
+    private Utils() {
+    }
+
     public static String loadFile(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bruteForceDataBase = new BufferedReader(new FileReader(fileName))) {
@@ -12,17 +16,17 @@ public class Utils {
                 stringBuilder.append(s).append("\n");
                 index++;
             }
-            System.out.println("Загружен файл (" + fileName + ") для шифрования " + index + " строк.");
+            Logger.log("Загружен файл (" + fileName + ") для шифрования " + index + " строк.");
         } catch (IOException ex) {
-            System.out.println("[ERROR] Ошибка загрузки файла для шифрования " + ex.getMessage());
+            Logger.log("[ERROR] Ошибка загрузки файла для шифрования " + ex.getMessage());
         }
         return stringBuilder.toString();
     }
 
     public static void printOriginText(String text, int key) {
-        System.out.println();
-        System.out.println("[Orig. text] " + text);
-        System.out.println("[Orig. text] Ключ шифроваия: (" + key + ")");
+        Logger.log("");
+        Logger.log("[Orig. text] " + text);
+        Logger.log("[Orig. text] Ключ шифроваия: (" + key + ")");
     }
 
     public static String cutString(String text) {
@@ -33,11 +37,9 @@ public class Utils {
     public static void saveToFile(String text, String fileName) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
             bw.write(text);
-            System.out.println("Записан защифрованный файл (" + fileName + ").");
+            Logger.log("Записан зашифрованный файл (" + fileName + ").");
         } catch (IOException ex) {
-            System.out.println("[ERROR] Ошибка записи зашифрованного файла" + ex.getMessage());
+            Logger.log("[ERROR] Ошибка записи зашифрованного файла" + ex.getMessage());
         }
-
     }
-
 }
