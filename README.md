@@ -1,4 +1,4 @@
-# Cryptanalyzer (Caesar Cipher)
+# CryptAnalyzer (Caesar Cipher)
 
 Program features:
 - Download the alphabet, file, and encryption key definition
