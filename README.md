@@ -1,4 +1,5 @@
 # CryptAnalyzer (Caesar Cipher)
+[![Java CI](https://github.com/opifexM/CryptoAnalyzer/actions/workflows/main.yml/badge.svg)](https://github.com/opifexM/CryptoAnalyzer/actions/workflows/main.yml)
 
 Program features:
 - Download the alphabet, file, and encryption key definition
